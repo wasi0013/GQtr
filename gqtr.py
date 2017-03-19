@@ -26,12 +26,15 @@ d = {}
 def get_quotes(base_url, tag, num_of_quotes = None, page = ''):
     url = base_url + tag + page
     response = requests.get(url)
-    soup = bs4.BeautifulSoup(response.text, "lxml")
+    soup = bs4.BeautifulSoup(response.text, 'lxml')
     [row.extract() for row in  soup.findAll(['script', 'br'])]
     divs = soup.select('div.quoteText')
     for div in divs:
-        text, author = (i.strip() for i in div.getText().strip().split('―'))
-        d[text] = author
+        try:
+            text, author = (i.strip() for i in div.getText().strip().split('―')) 
+            d[text] = author
+        except:
+            pass
     length = len(d)
     if num_of_quotes:
         if length >= num_of_quotes:
